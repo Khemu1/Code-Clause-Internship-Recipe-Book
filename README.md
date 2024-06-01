@@ -71,6 +71,6 @@ Before you begin, ensure you have met the following requirements:
 ### Delete Recipe
 
 - **URL:** `/delete`
-- **Method:** `DELETE`
+- **Method:** `POST`
 - **Request Body:** `application/json`
   - `id` (string): The ID of the recipe to delete

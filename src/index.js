@@ -121,7 +121,7 @@ function updateData(formData) {
 
 function deleteCard(id) {
   fetch(urlPrefix + "/delete", {
-    method: "DELETE",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
