@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Book</title>
+    <link rel="stylesheet" href="/assets/css/upper.css" />
+    <link rel="stylesheet" href="/assets/css/lower.css" />
+  </head>
+  <body>
+    <nav><p>Recipes Book</p></nav>
+    <div class="upper">
+      <form class="submit" method="POST" enctype="multipart/form-data">
+        <h2 class="form-title">Add Recipe</h2>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          class="title"
+          placeholder="Recipe Name"
+        />
+        <textarea
+          name="recipe"
+          placeholder="Write your recipe's ingredients"
+          class="recipe"
+        ></textarea>
+        <div class="img-area">
+          <label for="addFile">Upload your thumbnail:</label>
+          <input
+            type="file"
+            id="addFile"
+            name="thumbnail"
+            class="thumbnail"
+            accept="image/*"
+          />
+        </div>
+        <input type="submit" value="Add Recipe" />
+        <small class="error hide"></small>
+      </form>
+      <form class="edit" method="POST" enctype="multipart/form-data">
+        <h2 class="form-title">Edit Recipe</h2>
+        <input type="hidden" value="" class="id" />
+        <input
+          type="text"
+          name="title"
+          id="editTitle"
+          class="title"
+          placeholder="Recipe Name"
+        />
+        <textarea
+          name="recipe"
+          placeholder="Write your recipe's ingredients"
+          class="recipe"
+        ></textarea>
+        <div class="img-area">
+          <label for="editFile">Upload your thumbnail:</label>
+          <input
+            type="file"
+            id="editFile"
+            name="thumbnail"
+            class="thumbnail"
+            accept="image/*"
+          />
+          <input type="hidden" class="img-src" value="" />
+        </div>
+        <input type="submit" value="Edit Recipe" />
+        <small class="error hide"></small>
+      </form>
+    </div>
+
+    <div class="lower">
+      <div class="cards"></div>
+    </div>
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+:root {
+  --nav: #233c67;
+  --form-color: #233c67;
+  --background: #f3fafd;
+  --primary: #f12349;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto auto 2fr;
+  background-color: var(--background);
+  padding: 0;
+  margin: 0;
+  color: white;
+  gap: 30px;
+  font-family: Arial, sans-serif;
+}
+
+nav {
+  font-family: "Poetsen One", sans-serif;
+  background-color: var(--nav);
+  font-size: 35px;
+  height: max-content;
+  display: flex;
+  justify-content: center;
+}
+
+.upper {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 15px;
+}
+
+.upper form {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--form-color);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: grid;
+  gap: 15px;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c9e9f6;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+.img-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="file"] {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+}
+input:focus-within,
+textarea:focus-within {
+  outline: none;
+}
+
+input[type="submit"] {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: #000;
+  font-family: "Poetsen One", sans-serif;
+  transition: 250ms ease-in-out;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+.error.hide {
+  display: none;
+}

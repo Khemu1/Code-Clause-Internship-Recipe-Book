@@ -1,0 +1,19 @@
+{
+  "name": "recipe-book-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "node --watch server.js"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7",
+    "yup": "^1.4.0"
+  }
+}
