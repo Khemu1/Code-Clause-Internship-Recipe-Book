@@ -88,8 +88,8 @@ function sendData(formData) {
       return response.text();
     })
     .then((data) => {
-      console.log("Data sent:");
       displayData();
+      console.log("Data sent:");
     })
     .catch((error) => {
       console.error("Something went wrong when sending data:", error);
@@ -112,11 +112,11 @@ function updateData(formData) {
     })
     .then((data) => {
       console.log("updated");
-      displayData();
     })
     .catch((error) => {
       console.error("Something went wrong while updating: ", error);
     });
+  displayData();
 }
 
 function deleteCard(id) {
@@ -140,6 +140,7 @@ function deleteCard(id) {
     .catch((error) => {
       console.error("Something went wrong when deleting data:", error);
     });
+  displayData();
 }
 
 async function getData() {
@@ -208,7 +209,6 @@ cards.addEventListener("click", (e) => {
   if (e.target.closest(".del")) {
     let id = e.target.closest(".card").querySelector("input.id").value;
     deleteCard(id);
-    displayData();
   }
   if (e.target.closest(".card")) {
     let cardChildren = e.target.closest(".card").children;

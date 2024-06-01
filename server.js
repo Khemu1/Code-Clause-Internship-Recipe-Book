@@ -100,13 +100,40 @@ app.post("/delete", (req, res) => {
   if (!id) {
     return res.status(400).send("id is required");
   }
-  let stmt = db.prepare("DELETE FROM recipes where id = ?");
-  stmt.run(id, (err) => {
+
+  db.get("SELECT thumbnail FROM recipes WHERE id = ?", [id], (err, row) => {
     if (err) {
-      console.error("DB deletion error:", err);
-      return res.status(500).send("error with DB deletion");
+      console.error("DB retrieval error:", err);
+      return res.status(500).send("error retrieving the record");
     }
-    res.status(200).send("deleted");
+
+    if (!row) {
+      return res.status(404).send("record not found");
+    }
+
+    const thumbnail = row.thumbnail;
+
+    let stmt = db.prepare("DELETE FROM recipes WHERE id = ?");
+    stmt.run(id, (err) => {
+      if (err) {
+        console.error("DB deletion error:", err);
+        return res.status(500).send("error with DB deletion");
+      }
+
+      const filePath = path.join(
+        __dirname,
+        "assets/images/thumbnail",
+        thumbnail
+      );
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("File deletion error:", err);
+          return res.status(500).send("error with file deletion");
+        }
+
+        res.status(200).send("deleted");
+      });
+    });
   });
 });
 
