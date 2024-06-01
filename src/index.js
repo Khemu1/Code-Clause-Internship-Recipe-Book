@@ -3,6 +3,7 @@ let form = document.querySelector(".submit");
 let editForm = document.querySelector(".edit");
 let options = document.querySelector(".option");
 let cards = document.querySelector(".cards"); // Changed to .cards for event delegation
+let card;
 
 const urlPrefix = "/api";
 
@@ -76,7 +77,7 @@ editForm.addEventListener("submit", (e) => {
  *
  * @param {FormData} formData
  */
-function sendData(formData) {
+async function sendData(formData) {
   fetch(urlPrefix + "/submit", {
     method: "POST",
     body: formData,
@@ -87,9 +88,9 @@ function sendData(formData) {
       }
       return response.text();
     })
-    .then((data) => {
-      displayData();
+    .then(async (data) => {
       console.log("Data sent:");
+      attachEventListeners();
     })
     .catch((error) => {
       console.error("Something went wrong when sending data:", error);
@@ -99,7 +100,7 @@ function sendData(formData) {
  *
  * @param {FormData} formData
  */
-function updateData(formData) {
+async function updateData(formData) {
   fetch(urlPrefix + "/update", {
     method: "PUT",
     body: formData,
@@ -110,16 +111,19 @@ function updateData(formData) {
       }
       return response.text();
     })
-    .then((data) => {
+    .then(async (data) => {
+      attachEventListeners();
       console.log("updated");
     })
     .catch((error) => {
       console.error("Something went wrong while updating: ", error);
     });
-  displayData();
 }
 
-function deleteCard(id) {
+async function deleteCard(id) {
+  const card = document.querySelector(`input[value='${id}']`).parentElement;
+
+  card.classList.toggle("hide");
   fetch(urlPrefix + "/delete", {
     method: "POST",
     headers: {
@@ -133,14 +137,15 @@ function deleteCard(id) {
       }
       return response.text();
     })
-    .then((data) => {
-      document.querySelector(`input[value='${id}']`).closest(".card").remove();
+    .then(async (data) => {
+      card.remove();
+      attachEventListeners();
       console.log("data deleted");
     })
     .catch((error) => {
       console.error("Something went wrong when deleting data:", error);
+      card.classList.toggle("hide");
     });
-  displayData();
 }
 
 async function getData() {
@@ -171,15 +176,15 @@ async function displayData() {
   data.forEach((item) => {
     let card = `
     <div class="card">
-          <input type="hidden" class="id" value ="${item.id}">
+    <input type="hidden" class="id" value ="${item.id}">
           <div class="card-title">
-            ${item.title}
+          ${item.title}
           </div>
           <div class="card-thumbnail">
-            <img
-              src="./assets/images/thumbnail/${item.thumbnail}"
-              alt="somthing is wrong"
-            />
+          <img
+          src="./assets/images/thumbnail/${item.thumbnail}"
+          alt="somthing is wrong"
+          />
           </div>
           <pre class="card-recipe">${item.recipe}</pre>
           <div class="menu hide">
@@ -198,27 +203,55 @@ async function displayData() {
     cards.appendChild(cardNode);
   });
 }
-displayData();
+// displayData();
 
-cards.addEventListener("click", (e) => {
-  if (e.target.closest(".option")) {
-    console.log("Option clicked");
-    let menu = e.target.closest(".card").querySelector(".menu");
-    menu.classList.toggle("hide");
-  }
-  if (e.target.closest(".del")) {
-    let id = e.target.closest(".card").querySelector("input.id").value;
-    deleteCard(id);
-  }
-  if (e.target.closest(".card")) {
-    let cardChildren = e.target.closest(".card").children;
-    let id = cardChildren[0].value.trim();
-    let title = cardChildren[1].innerHTML.trim();
-    let recipe = cardChildren[3].innerHTML.trim();
-    let img = cardChildren[2].children[0].src;
-    document.querySelector(".edit .img-src").value = img;
-    document.querySelector(".edit .id").value = id;
-    document.querySelector(".edit .title").value = title;
-    document.querySelector(".edit .recipe").value = recipe;
-  }
-});
+async function attachEventListeners() {
+  await displayData();
+
+  const clickables = [".menu", ".option"];
+  let cardElements = document.querySelectorAll(".card");
+  cardElements.forEach((card) => {
+    const option = card.querySelector(".option");
+    const menu = card.querySelector(".menu");
+    const del = card.querySelector(".del");
+
+    option.addEventListener("click", (e) => {
+      menu.classList.toggle("hide");
+      e.stopPropagation();
+    });
+
+    del.addEventListener("click", (e) => {
+      let id = card.querySelector("input.id").value;
+      deleteCard(id);
+    });
+
+    card.addEventListener("click", (e) => {
+      let isClickable = clickables.some(
+        (clickable) => !!e.target.closest(clickable)
+      );
+
+      if (isClickable) return;
+
+      let cardChildren = e.target.closest(".card").children;
+      let id = cardChildren[0].value.trim();
+      let title = cardChildren[1].innerHTML.trim();
+      let recipe = cardChildren[3].innerHTML.trim();
+      let img = cardChildren[2].children[0].src;
+      document.querySelector(".edit .img-src").value = img;
+      document.querySelector(".edit .id").value = id;
+      document.querySelector(".edit .title").value = title;
+      document.querySelector(".edit .recipe").value = recipe;
+    });
+  });
+
+  document.addEventListener("click", async (e) => {
+    if (!e.target.closest(".option") && !e.target.closest(".menu")) {
+      let menus = document.querySelectorAll(".menu");
+      menus.forEach((menu) => {
+        menu.classList.add("hide");
+      });
+    }
+  });
+}
+
+attachEventListeners();

@@ -112,6 +112,12 @@ app.post("/delete", (req, res) => {
     }
 
     const thumbnail = row.thumbnail;
+    const filePath = path.join(
+      __dirname,
+      "public",
+      "assets/images/thumbnail",
+      thumbnail
+    );
 
     let stmt = db.prepare("DELETE FROM recipes WHERE id = ?");
     stmt.run(id, (err) => {
@@ -120,17 +126,12 @@ app.post("/delete", (req, res) => {
         return res.status(500).send("error with DB deletion");
       }
 
-      const filePath = path.join(
-        __dirname,
-        "assets/images/thumbnail",
-        thumbnail
-      );
       fs.unlink(filePath, (err) => {
         if (err) {
           console.error("File deletion error:", err);
           return res.status(500).send("error with file deletion");
         }
-
+        console.log(`File ${filePath} deleted successfully`);
         res.status(200).send("deleted");
       });
     });
