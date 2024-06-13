@@ -42,7 +42,7 @@ Before you begin, ensure you have met the following requirements:
 
 ## Usage
 
-1. Open your browser and navigate to `http://localhost:3000` to view the application.
+1. Open your browser and navigate to `http://localhost:5173` to view the application.
 2. Use the form on the left to add a new recipe.
 3. Use the form on the right to edit an existing recipe.
 4. The list of recipes will be displayed below the forms.
