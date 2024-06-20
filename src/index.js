@@ -42,7 +42,7 @@ form.addEventListener("submit", (e) => {
 editForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let formData = new FormData(editForm);
-  formData.append("id", document.querySelector(".edit .id").value);
+  formData.append("id", document.querySelector(".edit .edit-id").value);
   let title = document.querySelector(".edit .title");
   let recipe = document.querySelector(".edit .recipe");
   let img = document.querySelector(".edit .thumbnail");
@@ -67,7 +67,7 @@ editForm.addEventListener("submit", (e) => {
   error.classList.add("hide");
 
   updateData(formData);
-  document.querySelector(".edit .id").value = ``;
+  document.querySelector(".edit .edit-id").value = ``;
   title.value = ``;
   recipe.value = ``;
   document.querySelector(".edit .thumbnail").value = ``;
@@ -121,30 +121,42 @@ async function updateData(formData) {
 }
 
 async function deleteCard(id) {
-  const card = document.querySelector(`input[value='${id}']`).parentElement;
+  let cardToDelete;
+  const cards = document.querySelectorAll(".hidden-id");
+  cards.forEach((card) => {
+    if (card.value === id) {
+      cardToDelete = card;
+      return;
+    }
+  });
 
-  card.classList.toggle("hide");
-  fetch(urlPrefix + "/delete", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id: id }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("HTTP error, status = " + response.status);
-      }
-      return response.text();
-    })
-    .then(async (data) => {
-      card.remove();
-      console.log("data deleted");
-    })
-    .catch((error) => {
-      console.error("Something went wrong when deleting data:", error);
-      card.classList.toggle("hide");
+  if (!cardToDelete) {
+    console.error("Card not found");
+    return;
+  }
+
+  cardToDelete.classList.toggle("hide");
+
+  try {
+    const response = await fetch(urlPrefix + "/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id }),
     });
+
+    if (!response.ok) {
+      throw new Error("HTTP error, status = " + response.status);
+    }
+
+    await response.text();
+    cardToDelete.parentElement.remove();
+    console.log("Data deleted");
+  } catch (error) {
+    console.error("Something went wrong when deleting data:", error);
+    cardToDelete.classList.toggle("hide");
+  }
 }
 
 async function getData() {
@@ -175,7 +187,7 @@ async function displayData() {
   data.forEach((item) => {
     let card = `
     <div class="card">
-    <input type="hidden" class="id" value ="${item.id}">
+    <input type="hidden" class="hidden-id" value ="${item.id}">
           <div class="card-title">
           ${item.title}
           </div>
@@ -220,7 +232,7 @@ async function attachEventListeners() {
     });
 
     del.addEventListener("click", (e) => {
-      let id = card.querySelector("input.id").value;
+      let id = card.querySelector("input.hidden-id").value;
       deleteCard(id);
     });
 
@@ -237,7 +249,7 @@ async function attachEventListeners() {
       let recipe = cardChildren[3].innerHTML.trim();
       let img = cardChildren[2].children[0].src;
       document.querySelector(".edit .img-src").value = img;
-      document.querySelector(".edit .id").value = id;
+      document.querySelector(".edit .edit-id").value = id;
       document.querySelector(".edit .title").value = title;
       document.querySelector(".edit .recipe").value = recipe;
     });
