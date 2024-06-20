@@ -139,7 +139,6 @@ async function deleteCard(id) {
     })
     .then(async (data) => {
       card.remove();
-      attachEventListeners();
       console.log("data deleted");
     })
     .catch((error) => {
