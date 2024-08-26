@@ -184,8 +184,8 @@ app.put("/update", upload.fields([{ name: "thumbnail" }]), async (req, res) => {
   });
 });
 
-app.listen(port,"0.0.0.0", () => {
+app.listen(port, () => {
   console.log(
-    `Server is running on http://ec2-13-38-230-173.eu-west-3.compute.amazonaws.com:${port}`
+    `Server is running on localhost:${port}`
   );
 });
